@@ -1,0 +1,300 @@
+<!DOCTYPE html><!--HTML5 doctype-->
+<html>
+    <head>
+        <title>Rerun App</title>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+            <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+                    
+                    
+                    <link rel="stylesheet" type="text/css" href="kitchensink/jq.ui.css" title="default"/>
+                    <link rel="stylesheet" type="text/css" href="kitchensink/icons.css" /> 
+                    
+                    <style>
+                        .scrollBar{background:white;}
+                        h3 {text-align:center; font-size:35px;}
+                        ul.iconLinks li {font-size:12px; font-weight:normal;}
+                        .listbutton {
+                            display:block;
+                            border:1px solid black;
+                            color:black;
+                            background:orange;
+                            border-radius:5px;
+                            width:80%;
+                            text-decoration:none;
+                            text-align:center;
+                            margin:auto;
+                            margin-bottom:10px;
+                            height:30px;
+                            line-height:30px;
+                        }
+                        .class16 {
+                            background:green;
+                            color:red;
+                        }
+                        .jqmscrollBar {background:white !important;}	
+                        
+                        </style>
+                    <!-- uncomment for AppMobi apps
+                     <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/appmobi.js"></script> 
+                     <script type="text/javascript" charset="utf-8" src="http://localhost:58888/_appMobi/xhr.js"></script> 	
+                     -->
+                    <script type="text/javascript" charset="utf-8" src="./jq.mobi.js"></script> 
+                    <!-- include touch.js on desktop browsers only -->
+                    <script>
+                        function loadedPanel(what){
+                            $.ui.clearHistory();
+                            //We are going to set the badge as the number of li elements inside the target
+                            //$.ui.updateBadge("#jqmlink",$("#jqm").find("li").length);
+                        }
+                        function unloadedPanel(what){
+                            console.log("unloaded "+what.id);
+                        }
+                        if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
+                            var script=document.createElement("script");
+                            script.src="touch.js";
+                            var tag=$("head").append(script);
+                            $.os.android=true; //let's make it run like an android device
+                            $.os.desktop=true;
+                        }
+                        var oldElem="default";
+                        function setActiveStyleSheet(title) {
+                            var a = document.getElementsByTagName("link");
+                            var currElem;
+                            
+                            if(title==oldElem.getAttribute("title")||oldElem=="default")
+                            return;
+                            for(i=0; i<a.length; i++) {
+                                
+                                if(a[i].getAttribute("title")==title){
+                                    currElem=a[i];
+                                }
+                                else if(!a[i].getAttribute("disabled")&&a[i].getAttribute("title"))
+                                oldElem=a[i];
+                            }
+                            
+                            currElem.removeAttribute("disabled");
+                            jq.ui.showMask();
+                            window.setTimeout(function(){
+                                              jq.ui.hideMask();
+                                              oldElem.setAttribute("disabled","true");
+                                              },500);
+                        }
+                        $(document).ready(function(){
+                                          oldElem=document.getElementsByTagName("link")[0];
+                                          });
+                        </script>
+                    
+                    
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.swipe.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.template.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.carousel.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.css3animate.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.drawer.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.passwordBox.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.scroller.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.shake.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.selectBox.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.alphatable.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.actionsheet.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./plugins/jq.popup.js"></script> 
+                    <script type="text/javascript" charset="utf-8" src="./ui/jq.ui.js"></script> 
+                    
+                    <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script> 
+                    
+                    <script type="text/javascript">
+                        /* This function runs once the page is loaded, but appMobi is not yet active */
+                        var webRoot="./kitchensink/";
+                        $.ui.autoLaunch=false;
+                        var init = function(){
+                            $.ui.backButtonText="Back";  
+                            window.setTimeout(function(){$.ui.launch();},1500);
+                            //$.ui.removeFooterMenu(); This would remove the bottom nav menu
+                        };
+                        document.addEventListener("DOMContentLoaded",init,false);  
+                        
+                        
+                        /* This code prevents users from dragging the page */
+                        var preventDefaultScroll = function(event) {
+                            event.preventDefault();
+                            window.scroll(0,0);
+                            return false;
+                        };
+                        
+                        document.addEventListener('touchmove', preventDefaultScroll, false);
+                        
+                        /* This code is used to run as soon as appMobi activates */
+                        var onDeviceReady=function(){
+                            //navigator.notification.alert("PhoneGap is working");
+                        };
+                        // Wait for PhoneGap to load
+                        //
+                        document.addEventListener("deviceready", onDeviceReady, false);  
+                        function showHide(obj,objToHide){
+                            var el=$("#"+objToHide)[0];
+                            
+                            if(obj.className=="expanded"){
+                                obj.className="collapsed";
+                            }
+                            else{
+                                obj.className="expanded";
+                            }
+                            $(el).toggle();
+                            
+                        }
+                        
+                        </script>
+                    
+                    </head>
+    <body>
+        <div id="jQUi">
+            <!-- this is the splashscreen you see. -->
+            <div id="splashscreen" class='ui-loader'>
+                <img src="kitchensink/images/logo.png">
+                    <br><br>
+                    <span class='ui-icon ui-icon-loading spin'></span><h1 >Starting app</h1>
+                    </div>
+            <div id="header">
+                <div id='badgephone' onclick='jq.ui.toggleSideMenu()' style='width:100%;padding-top:7px;padding-right:5px;'><img align="right" src='kitchensink/images/logo.png'></div>
+                <div id='badgetablet'  style='width:100%;padding-top:7px;padding-right:5px;'><img align="right" src='kitchensink/images/logo.png'></div>
+            </div>
+            
+            <div id="content">
+                <div title='Welcome' id="main" class="panel" selected="true" data-load="loadedPanel" data-unload="unloadedPanel" data-tab="navbar_home">
+                    
+                    <h2 class='expanded' onclick='showHide(this,"main_info");'>Welcome</h2>
+                    <p id='main_info'>Welcome to the Rerun app. Please select an option from below.</p>
+                    <ul>
+                        <li class="icon paper big"><a href="#dashboard">Dashboard</a></li>
+                        <li class="icon key big"><a href="#payments">Payments</a></li>
+                        <li class="icon user big"><a href="#customers">Customers</a></li>
+                        <li class="icon mail big"><a href="#email-template">Email</a></li>
+                        <li class="icon basket big"><a href="#activity">Activity</a></li>
+                        <li class="icon settings big"><a href="#settings">Settings</a></li>
+                    </ul>
+                    
+                </div>
+                
+                <div title="Dashboard" id="dashboard" class="panel" data-footer="footerui">
+                    <h2 style="background:grey;">Payments</h2>
+                    <ul id='payments'>
+                        <li><a href="#pay_scheduled" data-transition="up">Scheduled</a></li>
+                        <li><a href="#pay_processed" data-transition="up">Processed</a></li>
+                        <li><a href="#pay_unsuccessful" data-transition="up">Unsuccessful</a></li>
+                    </ul>
+                    <p></p>
+                    <h2 style="background:grey;">Email</h2>
+                    <ul id='email'>
+                        <li><a href="#mail_scheduled" data-transition="up">Scheduled</a></li>
+                        <li><a href="#mail_sent" data-transition="up">Sent</a></li>
+                        <li><a href="#mail_bounced" data-transition="up">Bounced</a></li>
+                    </ul>
+                </div>
+                
+                <div id="pay_scheduled" title="Scheduled" class="panel" data-footer="footerui">
+                    <ul>
+                        <li><a href="#">Ramesh K P</a></li>
+                        <p>$ 300.00 <span style="float:right">17/03/2012</span></p>
+                        <li><a href="#">abhiabhi abhi(abhiabhi abhi)</a></li>
+                        <p>$ 500.00 <span style="float:right">13/03/2012</span></p>
+                        <li><a href="#">steve</a></li>
+                        <p>$ 350.00 <span style="float:right">16/03/2012</span></p>
+                    </ul>
+                </div>
+                
+                <div id="pay_processed" title="Processed" class="panel" data-footer="footerui">
+                    <ul>
+                        <li><a href="#">abhiabhi abhi(abhiabhi abhi)</a></li>
+                        <p>$ 6300.00 <span style="float:right">13/03/2012</span></p>
+                        <li><a href="#">steve</a></li>
+                        <p>$ 3540.00 <span style="float:right">16/03/2012</span></p>
+                        <li><a href="#">john</a></li>
+                        <p>$ 3796.00 <span style="float:right">16/03/2012</span></p>
+                        <li><a href="#">Ramesh K P</a></li>
+                        <p>$ 4300.00 <span style="float:right">17/03/2012</span></p>
+                    </ul>
+                </div>
+                
+                <div id="pay_unsuccessful" title="Unsuccessful" class="panel" data-footer="footerui">
+                    <p>You have no unsuccessful payments</p>
+                </div>
+                
+                <div id="mail_scheduled" title="Scheduled" class="panel" data-footer="footerui">
+                    <p>You have no scheduled emails</p>
+                </div>
+                
+                <div id="mail_sent" title="Sent" class="panel" data-footer="footerui">
+                    <ul>
+                        <li><a href="#">ramesh.kedlaya@sourcebits.com</a></li>
+                        <p>test<span style="float:right">13/03/2012</span></p>
+                        <li><a href="#">steve.jacob@gmail.com</a></li>
+                        <p>test <span style="float:right">24/02/2012</span></p>
+                        <li><a href="#">john.smith@gmail.com</a></li>
+                        <p>test <span style="float:right">17/02/2012</span></p>
+                        <li><a href="#">anoop.jain@sourcebits.com</a></li>
+                        <p>test <span style="float:right">04/03/2012</span></p>
+                    </ul>
+                </div>
+                
+                <div id="mail_bounced" title="Bounced" class="panel" data-footer="footerui">
+                    <p>You have no bounced emails</p>
+                </div>
+                
+                <div id="mytasks" title="My Tasks" class="panel" data-tab="navbar_mytasks" data-footer="footerui">
+                    <ul>
+                        <li class="icon mail big"><a href="#compose_email">Compose Mail</a></li>
+                        <li class="icon user big"><a href="#add_customer">New Customer</a></li>
+                        <li><a href="#new_payment_stream">New Payment Stream</a></li>
+                        <li class="icon download big"><a href="#impdata">Import Data</a></li>
+                        <li><a href="#credit_cards">Credit Cart List</a></li>
+                    </ul>
+                </div>
+                
+                <div id="mailtmpls" title="My Email Templates" class="panel" data-tab="navbar_mailtmpls" data-footer="footerui">
+                    <ul>
+                        <li><a href="#101" >CC Exp This Month</a></li>
+                        <li><a href="#102" >Customer Address</a></li>
+                        <li><a href="#102" >Customer Details</a></li>
+                    </ul>
+                </div>
+                
+                <div id="help" title="Help" class="panel" data-tab="navbar_help" data-footer="footerui">
+                    <ul>
+                        <li><a href="#whatnew" >What is new?</a></li>
+                        <li><a href="#support" >Support</a></li>
+                        <li><a href="#blog" >Blog</a></li>
+                        <li><a href="#press" >Press</a></li>
+                    </ul>
+                </div>
+                
+                <div id="about" title="About this App" class="panel" data-tab="navbar_about">
+                    Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+                    Phasellus varius eleifend tellus. Suspendisse potenti. 
+                    Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. 
+                    Nulla facilisi. Sed wisi lectus, placerat nec, mollis quis, posuere eget, arcu.
+                </div>
+            </div>
+            
+            <!-- navbar -->
+            <!-- navbar -->
+            <div id="navbar">
+                <div class="horzRule"></div>
+                <a href="#main" id='navbar_home' class="icon home" >Home</a>
+                <a href="#mytasks" id='navbar_mytasks' class='icon stack' >My Tasks</a>
+                <a href="#mailtmpls" id='navbar_mailtmpls' class="icon mail" >Mailtmps</a>
+                <a href="#about" id='navbar_about' class="icon info" >About</a>
+            </div>
+            
+            <footer id='footerui'>
+                <div class="horzRule"></div>
+                <a href="#main" id='navbar_home' class="icon home" >Home</a>
+                <a href="#mytasks" id='navbar_mytasks' class='icon stack' >My Tasks</a>
+                <a href="#mailtmpls" id='navbar_mailtmpls' class="icon mail" >Mailtmps</a>
+                <a href="#help" id='navbar_help' class="icon info" >Help</a>	  
+            </footer>
+            <!-- ------------------------------------------ -->
+            
+        </div>
+    </body>
+</html>
